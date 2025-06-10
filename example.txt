@@ -1,3 +1,1 @@
-Second NodeJS application 
-first application in NodeJS
-If we use NodeJS we can get the output within in the terminal it self no need of getting a separate browser
+Second NodeJS applicationIf we use NodeJS we can get the output within in the terminal it self no need of getting a separate browser
