@@ -1,4 +1,5 @@
-let greetings = "hello, node.js";
+                                                                    // Basic expamples using FS module Date functions 
+var greetings = "hello, node.js";
 console.log(greetings)
             // to get the methods from fs module we use require function
 var fs = require('fs');
@@ -136,21 +137,36 @@ sum(123,456);
 
 
 var fs = require('fs');
-fs.readFile('Data1.json', 'utf8', (err, data)=>{
-  if(err){
-    console.error('Error Fetching Files: ', err);
-    return;
-  }
-  var jsonData = JSON.parse(data);
-  jsonData.productVariant.forEach((variant)=>{
-      console.log(`processing product variant: ${variant.productVarientName}`)
-      variant.productFeatureString.forEach((feature)=>{
-          var featureString = feature.setProductFeature;
-          if(featureString && featureString.includes("=") && !featureString.includes("!") && !featureString.includes("''")){
-              var [characteristic, characteristicValue] = featureString.split("=");
-                console.log(`Characteristic = ${characteristic}`);
-                console.log(`Characteristic Value = ${characteristicValue}`)   
-          }     
-        });
-    })
-  })
+var jsonData = fs.readFileSync('Data1.json', 'utf8');
+var data = JSON.parse(jsonData);
+var outputData = data.productVariant.map((variant) => {
+    var variantOutput = {
+        productVariantID: variant.productVariantID,
+        productVariantName: variant.productVariantName,
+        productVariantDescription: variant.productVariantDescription,
+        productVariantOwner: variant.productVariantOwner,
+        commercialComplete: variant.commercialCompleteProductVariant,
+        technicalComplete: variant.technicallyCompleteProductVariant,
+        effectivity: variant.effectivity.map((eff) => ({
+            effectiveIn: eff.effectiveIn, 
+            effectiveOut: eff.effectiveOut,
+            cn: eff.cn,
+            validFor: eff.validFor,
+            validForPlant: eff.validForPlant
+        })),
+        characteristics: []
+    };
+    variant.productFeatureString.forEach((feature) => {
+        var featureString = feature.setProductFeature;
+        if (featureString && featureString.includes('=') && !featureString.includes('!') && !featureString.includes("''")) {
+            var [characteristic, characteristicValue] = featureString.split('=');
+            variantOutput.characteristics.push({
+                characteristic: characteristic.trim(),
+                CharacteristicValue: characteristicValue.trim()
+            });
+        }
+    });
+    return variantOutput;
+});
+fs.writeFileSync('test1.json', JSON.stringify(outputData, null, 2), 'utf8');
+console.log('Data written successfully to test1.json');
