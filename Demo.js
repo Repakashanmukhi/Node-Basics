@@ -170,3 +170,4 @@ var outputData = data.productVariant.map((variant) => {
 });
 fs.writeFileSync('test1.json', JSON.stringify(outputData, null, 2), 'utf8');
 console.log('Data written successfully to test1.json');
+
